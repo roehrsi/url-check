@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Simple URL Checker Tool</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <h1 style="padding: 20px;">Simple URL Checker Tool</h1>
+    <br>
+    <section>
+        <div style="float:left; padding: 20px; ">
+            <form action="#" th:action="@{/}" th:object="${resultsEntry}" method="post">
+                URL: <input type="text" th:field="*{url}">
+                <input type="submit" value="Add new URL" name="addEntry">
+            </form>
+        </div>
+        <div style="float: left; padding: 20px; border: 2px; text-wrap: pretty;">
+            <p>Enter a URL into the Text field to add it to the list. <br>Only correctly formatted http URLs (e.g. 'https://my.domain.com/somepage') can be connected to. </p>
+        </div>
+        <br>
+    </section>
+
+    <!-- This table displays the provided urls and their respective check result-->
+    <div id="resultsTable" style="padding: 20px;">
+        <form action="#" th:action="@{/}" th:object="${resultsEntry}" method="post">
+            <table class="table table-dark table-sm table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">URL</th>
+                        <th scope="col">Status Code</th>
+                        <th scope="col">Last Check Date</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry, eStat: ${allResultsEntries}">
+                        <td th:text="${eStat.index}"></td>
+                        <td th:text="${entry.url}"></td>
+                        <td th:text="${entry.statusCode == 0 }? 'No Connection or Malformed URL' : ${entry.statusCode}"></td>
+                        <td th:text="${#temporals.format(entry.lastCheckDateTime, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                        <td>
+                            <button type="submit" name="removeEntry" th:value="${eStat.index}">X</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+
+</body>
+
+</html>
